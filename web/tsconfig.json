@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "dist",
+    "baseUrl": ".src",
+    "sourceMap": true,
+    "moduleResolution": "classic",
+  },
+}
