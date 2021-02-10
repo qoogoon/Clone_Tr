@@ -1,4 +1,4 @@
-import Canvas from "./view/Canvas.js"
+import CanvasController from "./controller/CanvasController.js"
 
-Canvas()
+new CanvasController()
 
