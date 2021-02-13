@@ -2,6 +2,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    /* width: 100vw; */
     /* position: relative; */
     position: absolute;
     top: 0;
@@ -12,15 +13,29 @@
 }
 
 #board {
-    height: auto;
+    /* height: auto;
     user-select: none;
     white-space: nowrap;
-    margin: 5px;
+    padding: 5px;
+    position: relative;
+    flex-grow: 1;
+    width: fit-content;
+    background-color: rgb(131, 140, 145); */
+
+    -webkit-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    padding: 5px;
+    /* margin-bottom: 8px; */
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* padding-bottom: 8px; */
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+
 }
 
 /*#region 리스트*/
@@ -34,6 +49,16 @@
     white-space: nowrap;
 }
 
+#mod-float {
+    background-color: blue;
+    height: auto;
+    /* background-color: rgb(172, 172, 172); */
+}
+
+#mod-float>div {
+    visibility: hidden;
+}
+
 .list {
     background-color: #ebecf0;
     border-radius: 3px;
@@ -45,10 +70,35 @@
     white-space: normal;
 }
 
+.list-header {
+    flex: 0 0 auto;
+    padding: 10px 8px;
+    position: relative;
+    min-height: 20px;
+}
+
+.editing-target {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.floating {
+    position: absolute;
+}
+
+.list-title {
+    font-weight: 500;
+    color: #464646;
+}
+
 /*#endregion 리스트*/
 
 /*#region 리스트 - 추가*/
-.add-list {
+.mod-add {
     background-color: #ebecf0;
     border-radius: 3px;
     height: auto;
@@ -59,11 +109,11 @@
 /*#endregion 리스트 - 추가*/
 
 /*#region 리스트 - 추가(idle 상태)*/
-.add-list.list-wrapper.is-idle:hover {
+.mod-add.list-wrapper.is-idle:hover {
     background-color: hsla(0, 0%, 100%, .32);
 }
 
-.add-list.list-wrapper.is-idle {
+.mod-add.list-wrapper.is-idle {
     background-color: hsla(0, 0%, 100%, .24);
     cursor: pointer;
 }
@@ -127,6 +177,7 @@
 .list-add-close-button {
     font-size: 25px;
     padding: 5px 10px;
+    cursor: pointer;
 }
 
 /*#endregion 리스트 - 추가(active 상태)*/

@@ -4,4 +4,8 @@ export default class CanvasModel {
     getLists(): ListData[] {
         return Constant.dummyLists
     }
+
+    setLists(lists: ListData[]) {
+        Constant.dummyLists = lists
+    }
 }
