@@ -49,13 +49,13 @@
     white-space: nowrap;
 }
 
-#mod-float {
-    background-color: blue;
+#mod-list-float {
+    background-color: #6F777B;
     height: auto;
     /* background-color: rgb(172, 172, 172); */
 }
 
-#mod-float>div {
+#mod-list-float>div {
     visibility: hidden;
 }
 
@@ -77,7 +77,8 @@
     min-height: 20px;
 }
 
-.editing-target {
+.float-list-target,
+.float-item-target {
     cursor: pointer;
     position: absolute;
     top: 0;
@@ -104,6 +105,7 @@
     height: auto;
     min-height: 32px;
     padding: 4px;
+    cursor: pointer;
 }
 
 /*#endregion 리스트 - 추가*/
@@ -118,7 +120,7 @@
     cursor: pointer;
 }
 
-.open-add-list {
+.list-wrapper .open-add {
     color: white
 }
 
@@ -130,7 +132,7 @@
 .icon-add {
     display: inline-block;
     height: 20px;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 20px;
     width: 20px;
     /* color: white */
@@ -143,7 +145,8 @@
 /*#region 리스트 - 추가(active 상태)*/
 
 
-.list-name-input {
+.list-name-input,
+.item-name-input {
     width: -webkit-fill-available;
     background-color: #fff;
     border: none;
@@ -155,11 +158,12 @@
     outline: none;
 }
 
-.list-add-controls {
+.list-add-controls,
+.item-add-controls {
     display: flex;
 }
 
-.list-add-button {
+.add-button {
     padding: 8px 12px;
     background-color: #5aac44;
     border: none;
@@ -170,14 +174,46 @@
 
 }
 
-.list-add-button:hover {
+.add-button:hover {
     background-color: #61bd4f
 }
 
-.list-add-close-button {
+.add-close-button {
     font-size: 25px;
     padding: 5px 10px;
     cursor: pointer;
 }
 
 /*#endregion 리스트 - 추가(active 상태)*/
+
+/*#region 아이템 - 추가(active 상태)*/
+.item-wrapper {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgb(9 30 66 / 25%);
+    cursor: pointer;
+    display: block;
+    margin: 5px 8px;
+    padding: 7px;
+    max-width: 240px;
+    min-height: 20px;
+    position: relative;
+    text-decoration: none;
+    z-index: 0;
+}
+
+.add-item {
+    padding: 4px 8px;
+}
+
+.add-item .open-add {
+    color: rgb(54, 54, 54);
+}
+
+#mod-item-float {
+    background-color: #d4d4d4;
+}
+
+#mod-item-float>div {
+    visibility: hidden;
+}
