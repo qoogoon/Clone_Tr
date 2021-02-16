@@ -21,18 +21,22 @@ export default class CanvasController {
     listFloatingOffset: ElementPosition = { left: 0, top: 0 }
     itemFloatingOffset: ElementPosition = { left: 0, top: 0 }
     lists: List[] = []
+    arrListData: ListData[] = []
     constructor() {
         this.refresh()
     }
 
     refresh() {
-        const arrListData = CanvasModel.getLists()
-        this.render(arrListData)
+        CanvasModel.getLists().then(lists => {
+            this.arrListData = lists
+            this.render(lists)
+        }).catch(reason => {
+            alert(`${reason}`)
+        })
     }
 
     render(arrListData: ListData[]) {
         CanvasView.initBoard()
-
         arrListData.sort((a, b) => a.index - b.index).forEach(list => {
             this.addList(list)
         })
@@ -149,7 +153,8 @@ export default class CanvasController {
         if (isExchangeLeft || isExchangeRight) {
             const targetItem = CanvasModel.getItem(this.floatingListIndex, this.floatingItemIndex)
             this.floatingListIndex = isExchangeLeft ? this.floatingListIndex - 1 : this.floatingListIndex + 1
-            const nextList = CanvasModel.getLists().find(list => list.index === this.floatingListIndex)
+            // const nextList = CanvasModel.getLists().find(list => list.index === this.floatingListIndex)  //리스트 읽기 주석처리
+            const nextList = this.arrListData.find(list => list.index === this.floatingListIndex)
             this.floatingItemIndex = nextList.items.length === 0 ? 0 : this.floatingItemIndex
             const lastItemIndex = nextList.items.length
             let index = this.floatingItemIndex < lastItemIndex ? this.floatingItemIndex : lastItemIndex
@@ -298,7 +303,8 @@ export default class CanvasController {
 
     private exchangeItem(listIndex: number, indexTop: number, indexBottom: number) {
         if (listIndex === -1 || indexTop === -1 || indexBottom === -1) return
-        const listData = CanvasModel.getLists().find(list => list.index === listIndex)
+        const listData = this.arrListData.find(list => list.index === listIndex)
+        // const listData = CanvasModel.getLists().find(list => list.index === listIndex)   //리스트 읽기 주석처리
         const topItemData = listData.items.find(item => item.index === indexTop)
         const bottomItemData = listData.items.find(item => item.index === indexBottom)
         const tmpIndex = topItemData.index

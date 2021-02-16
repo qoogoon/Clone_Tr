@@ -1,8 +1,8 @@
 export interface ListData {
     seq: number
     title: string
-    items: ItemData[]
     index: number
+    items?: ItemData[]
 }
 
 export interface ItemData {
@@ -15,4 +15,5 @@ export interface ItemData {
 export interface Response<T> {
     result: "success" | "fail"
     data?: T[] | T
+    message?: string
 }

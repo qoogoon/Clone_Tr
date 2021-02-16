@@ -1,18 +1,83 @@
-import { ItemData, ListData } from "../data/container/DocumentContainer.js"
+import { ItemData, ListData, Response } from "../data/container/DocumentContainer.js"
 import Constant from "../data/constant/Constant.js"
+import { getRequest, postRequest } from "./Connect.js"
+// import Url from "../data/constant/Url.js"
+import Url from "../data/constant/Url.js"
+
 export default class CanvasModel {
-    static getLists(): ListData[] {
-        Constant.dummyLists.forEach(list => {
-            const items = Constant.dummyItems.filter(item => item.listSeq === list.seq)
-            items.sort((a, b) => a.index - b.index)
-            list.items = items
+    // static getLists(): Promise<ListData[]> {
+    //     console.log("test")
+
+    //     return new Promise((resolve, reject) => {
+    //         fetch(Url.Lists)
+    //             .then((response) => response.json())
+    //             .then((responseData) => {
+    //                 const response: Response<ListData[]> = responseData as Response<ListData[]>
+    //                 if (response.result === "success") {
+    //                     const lists = response.data as ListData[]
+    //                     resolve(lists)
+    //                 }
+    //                 else
+    //                     reject(response.result)
+    //             }).catch((reason: any) => {
+    //                 reject(reason)
+    //             })
+    //     })
+    // }
+
+
+    static getLists(): Promise<ListData[]> {
+        console.log("test")
+        return new Promise((resolve, reject) => {
+            getRequest(Url.Lists).then((responseData) => {
+                const response: Response<ListData[]> = responseData as Response<ListData[]>
+                if (response.result === "success") {
+                    const lists = response.data as ListData[]
+                    resolve(lists)
+                }
+                else
+                    reject(response.result)
+            }).catch((reason: any) => {
+                reject(reason)
+            })
         })
-        return Constant.dummyLists
     }
 
-    static setLists(lists: ListData[]) {
-        Constant.dummyLists = lists
-    }
+
+    // static setLists(lists: ListData[]): Promise<void> {
+    //     return new Promise((resolve, reject) => {
+    //         return fetch(Url.Lists, {
+    //             method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+    //             mode: 'cors', // no-cors, cors, *same-origin
+    //             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    //             credentials: 'same-origin', // include, *same-origin, omit
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 // 'Content-Type': 'application/x-www-form-urlencoded',
+    //             },
+    //             redirect: 'follow', // manual, *follow, error
+    //             referrer: 'no-referrer', // no-referrer, *client
+    //             body: JSON.stringify(lists), // body data type must match "Content-Type" header
+    //         })
+    //             .then(response => response.json());
+    //     })
+    // }
+
+    // static getList(index: number) : Promise<ListData[]> {
+    //     return new Promise((resolve, reject) => {
+    //         fetch(Url.Lists)
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 const response: Response<ListData[]> = data as Response<ListData[]>
+    //                 if (response.result === "success")
+    //                     resolve(response.data as ListData[])
+    //                 else
+    //                     reject(response.result)
+    //             }).catch((reason: any) => {
+    //                 reject(reason)
+    //             })
+    //     })
+    // }
 
     static getList(index: number) {
         return Constant.dummyLists.find(list => list.index === index)
