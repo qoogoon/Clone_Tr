@@ -12,8 +12,8 @@ export interface ItemData {
     listSeq: number
 }
 
-export interface Response<T> {
-    result: "success" | "fail"
+export interface ResponseServer<T> {
+    ok: boolean
     data?: T[] | T
-    message?: string
+    serverMessage?: string
 }

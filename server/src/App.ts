@@ -1,8 +1,11 @@
 import * as Cors from "cors";
 import * as express from "express";
+// import * as WebSocket from "ws";
+import WebSocketServer from "./WebSocketServer.js"
 
 //component
-import CanvasController from "./controller/CanvasController.js";
+import ListController from "./controller/ListController.js";
+import ItemController from "./controller/ItemController.js";
 
 class App {
     test: string;
@@ -45,7 +48,11 @@ class App {
                 res.send("Welcome to my server");
             }
         );
-        new CanvasController(this.app)
+        const socketServer = new WebSocketServer()
+        const listController = new ListController(this.app, socketServer)
+        const itemController = new ItemController(this.app, socketServer)
+
+
     }
 }
 

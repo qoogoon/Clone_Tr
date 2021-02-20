@@ -1,5 +1,6 @@
 import CanvasView from "../view/CanvasView.js"
-import CanvasModel from "../model/CanvasModel.js"
+import ItemModel from "../model/ItemModel.js"
+import { handleError } from "../model/Connect.js"
 import { ItemData, ListData } from "../data/container/DocumentContainer.js"
 import { preventParentClick, setOnListnerbyClass, setOnListnerbyID } from "./ElementListner.js"
 import Constant from "../data/constant/Constant.js"
@@ -50,7 +51,6 @@ export default class List {
      * @returns 추가 된 리스트 Element
      */
     private addItem(listIndex: number, data: ItemData): HTMLElement {
-        // const list = new List(data, CanvasView)
         this.items.push(data)
         const newItemElement = CanvasView.addItem(listIndex, data)
         const rect = newItemElement.getBoundingClientRect()
@@ -84,6 +84,7 @@ export default class List {
                 setOnListnerbyClass("click", "add-close-button", () => {
                     this.setItemAddMode(AddMode.IDLE)
                 })
+                this.canvasCtrl.addItemListIndex = this.listData.index
                 break;
         }
     }
@@ -109,8 +110,10 @@ export default class List {
         if (inputText === "") return
 
         inputElement.value = ""
-        const addItemData: ItemData = CanvasModel.addItem(inputText, this.items.length, this.listData.seq)
-        this.addItem(this.listData.index, addItemData)
+        ItemModel.addItem(inputText, this.items.length, this.listData.seq).then(response => {
+            this.addItem(this.listData.index, response)
+            this.canvasCtrl.loadFromServer()
+        }).catch((reason) => { handleError(reason) })
     }
 
     /**

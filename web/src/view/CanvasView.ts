@@ -5,7 +5,6 @@ export default class CanvasView {
     static UNIQUE = 0
     static boardElement: HTMLElement
     static listElements: HTMLElement[] = []
-    static floatingList: HTMLElement
 
     /**
      * 보드 초기화
@@ -190,11 +189,9 @@ export default class CanvasView {
         floatingList.style.left = position.left + "px"
         floatingList.style.top = position.top + "px"
         document.getElementsByTagName("body").item(this.UNIQUE).appendChild(floatingList)
-        this.floatingList = floatingList
 
         const itemContainer = floatingList.getElementsByClassName("item-container").item(this.UNIQUE)
         listData.items.forEach(item => {
-            // this.addItem(listData.index, item)
             const wrapperElement = this.createItemElement(item)
             itemContainer.appendChild(wrapperElement)
         })
@@ -209,8 +206,6 @@ export default class CanvasView {
         floatingItem.style.left = position.left + "px"
         floatingItem.style.top = position.top + "px"
         bodyElement.appendChild(floatingItem)
-        // this.floatingItem = floatingItem
-
         return floatingItem
     }
 

@@ -1,5 +1,7 @@
 import CanvasController from "./controller/CanvasController.js"
-// import CanvasController from "./controller/CanvasController.js"
+import WebSocketClient from "./WebSocketClient.js"
 
-new CanvasController()
+const controller = new CanvasController()
+export const webSocketClient = new WebSocketClient(controller)
+// export const webSocketClient = new WebSocketClient(controller)
 

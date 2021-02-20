@@ -217,3 +217,7 @@
 #mod-item-float>div {
     visibility: hidden;
 }
+
+.item-title {
+    word-wrap: break-word
+}
