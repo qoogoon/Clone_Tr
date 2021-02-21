@@ -1,4 +1,4 @@
-import { ItemData, ListData, ResponseServer } from "../data/container/DocumentContainer.js"
+import { CardData, ListData, ResponseServer } from "../data/container/DocumentContainer.js"
 import Constant from "../data/constant/Constant.js"
 import { getRequest, postRequest, putRequest } from "./Connect.js"
 import Url from "../data/constant/Url.js"
@@ -32,9 +32,9 @@ export default class ListModel {
         })
     }
 
-    static addList(title: string, items: ItemData[], index: number): Promise<ListData> {
+    static addList(title: string, cards: CardData[], index: number): Promise<ListData> {
         const addData: ListData = {
-            seq: -1, index, items, title
+            seq: -1, index, cards, title
         }
         return new Promise((resolve, reject) => {
             postRequest(Url.List, { addData, id: WebSocketClient.id }).then((response: ResponseServer<ListData>) => {

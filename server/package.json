@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node dist/server.js \" ",
+    "start": "tsc-watch --onSuccess \"node dist/Server.js \" ",
     "build": "webpack --config webpack.config.js"
   },
   "dependencies": {

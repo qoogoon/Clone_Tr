@@ -4,9 +4,8 @@ export default class WebSocketClient {
     static id: string
     socket: WebSocket
     constructor(controller: CanvasController) {
-        this.socket = new WebSocket('ws://172.30.1.55:4001');
+        this.socket = new WebSocket('ws://localhost:4001');
         this.socket.addEventListener('message', function (event) {
-            console.log(event.data)
             const data = JSON.parse(event.data)
             switch (data.message) {
                 case "reload":
@@ -14,7 +13,6 @@ export default class WebSocketClient {
                     break
             }
             WebSocketClient.id = data.id
-            console.log(data.id)
         });
     }
 }

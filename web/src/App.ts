@@ -3,5 +3,4 @@ import WebSocketClient from "./WebSocketClient.js"
 
 const controller = new CanvasController()
 export const webSocketClient = new WebSocketClient(controller)
-// export const webSocketClient = new WebSocketClient(controller)
 

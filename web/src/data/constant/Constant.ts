@@ -1,4 +1,4 @@
-import { ItemData, ListData } from "../container/DocumentContainer.js"
+import { CardData, ListData } from "../container/DocumentContainer.js"
 export default class Constant {
 }
 

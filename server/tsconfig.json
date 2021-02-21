@@ -4,21 +4,7 @@
     "outDir": "dist",
     "module": "CommonJS",
     "sourceMap": true,
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "emitDecoratorMetadata": true,
-    // "experimentalDecorators": true,
-    // "esModuleInterop": true,
-    // "isolatedModules": true,
   },
-  // "compilerOptions": {
-  //   "module": "commonjs",
-  //   "target": "ES6",
-  //   "sourceMap": true,
-  //   "outDir": "dist",
-  //   "esModuleInterop": true,
-  //   "resolveJsonModule": true,
-  // },
   "include": [
     "src/**/*"
   ],

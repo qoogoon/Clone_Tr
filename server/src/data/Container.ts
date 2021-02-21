@@ -2,10 +2,10 @@ export interface ListData {
     seq: number
     title: string
     index: number
-    items?: ItemData[]
+    cards?: CardData[]
 }
 
-export interface ItemData {
+export interface CardData {
     seq: number
     text: string
     index: number

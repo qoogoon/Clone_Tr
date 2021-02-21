@@ -1,4 +1,4 @@
-import { ItemData, ListData } from "../data/container/DocumentContainer.js"
+import { CardData, ListData } from "../data/container/DocumentContainer.js"
 import { AddMode, ElementPosition } from "../controller/CanvasController.js"
 
 export default class CanvasView {
@@ -22,7 +22,7 @@ export default class CanvasView {
     }
 
     /**
-     * 리스트 Element 추가
+     * 리스트 Element를 Board에 추가
      * @param listData 리스트 데이터
      * @returns 추가 된 리스트 Element
      */
@@ -33,47 +33,66 @@ export default class CanvasView {
         return newChild
     }
 
-    static addItem(listIndex: number, data: ItemData): HTMLElement {
+    /**
+     * 카드 Element를 Board에 추가
+     * @param listIndex 부모 리스트 인덱스
+     * @param data 추가 할 데이터
+     */
+    static addCard(listIndex: number, data: CardData): HTMLElement {
         let listElement: HTMLElement = document.getElementsByClassName("js-list").item(listIndex) as HTMLElement
-        const wrapperElement = this.createItemElement(data)
-        let itemContainer: HTMLElement = listElement.getElementsByClassName("item-container").item(this.UNIQUE) as HTMLElement
-        const refChild = itemContainer.childNodes.item(data.index)
+        const wrapperElement = this.createCardElement(data)
+        let cardContainer: HTMLElement = listElement.getElementsByClassName("card-container").item(this.UNIQUE) as HTMLElement
+        const refChild = cardContainer.childNodes.item(data.index)
         if (refChild !== null)
-            itemContainer.insertBefore(wrapperElement, itemContainer.childNodes.item(data.index))
+            cardContainer.insertBefore(wrapperElement, cardContainer.childNodes.item(data.index))
         else
-            itemContainer.appendChild(wrapperElement)
+            cardContainer.appendChild(wrapperElement)
         return wrapperElement
     }
 
-    static createItemElement(data: ItemData): HTMLElement {
+    /**
+     * 카드 엘레멘트 생성
+     * @param data 생성 될 데이터
+     */
+    static createCardElement(data: CardData): HTMLElement {
         const wrapperElement = document.createElement("div")
-        wrapperElement.className = "js-item item-wrapper"
+        wrapperElement.className = "js-card card-wrapper"
 
         const editingTarget = document.createElement("div")
-        editingTarget.className = "float-item-target"
+        editingTarget.className = "float-card-target"
         wrapperElement.appendChild(editingTarget)
 
         const titleElement = document.createElement("div")
-        titleElement.className = "item-title"
+        titleElement.className = "card-title"
         titleElement.innerHTML = data.text
         wrapperElement.appendChild(titleElement)
         return wrapperElement
     }
 
-
-    static addItemAddElement(parent: HTMLElement, mode: AddMode): HTMLElement {
+    /**
+     * 카드를 추가하는 Element를 부모 리스트 Element에 삽입하기
+     * @param parent 삽입 될 부모 리스트 Element
+     * @param mode 카드 추가 모드(idle : 추가 컴포넌트 대기상태, adding : 추가 컴포넌트 활성 상태)
+     */
+    static addCardAddElement(parent: HTMLElement, mode: AddMode): HTMLElement {
         let listElement: HTMLElement = this.getElementAtChild(parent, "list")
-        let itemContainer: HTMLElement = this.getElementAtChild(listElement, "item-container")
-        const itemAddElement = this.getAddElement(mode, "item")
-        itemAddElement.className = "js-add-item add-item mod-add is-idle"
-        itemContainer.appendChild(itemAddElement)
-        return itemAddElement
+        let cardContainer: HTMLElement = this.getElementAtChild(listElement, "card-container")
+        const cardAddElement = this.getAddElement(mode, "card")
+        cardAddElement.className = "js-add-card add-card mod-add is-idle"
+        cardContainer.appendChild(cardAddElement)
+        return cardAddElement
     }
 
-    static getElementAtChild(parent: HTMLElement, className: string): HTMLElement {
+    /**
+     * 대상이 되는 Element 이하의 자식 Elements 얻기
+     * @param parent 자식 Element를 얻을 부모 Element
+     * @param childClassName 찾을 자식 클래스 이름
+     * @returns 부모 이하 특정 자식 class의 Element
+     */
+    static getElementAtChild(parent: HTMLElement, childClassName: string): HTMLElement {
         let listElement: HTMLElement
         parent.childNodes.forEach((child: HTMLElement) => {
-            if (child.className === className) {
+            if (child.className === childClassName) {
                 listElement = child
                 return
             }
@@ -81,6 +100,11 @@ export default class CanvasView {
         return listElement
     }
 
+    /**
+     * 해당 리스트의 위치값 얻기
+     * @param listIndex 대상 리스트 인덱스
+     * @returns 위치값
+     */
     static getListPosition(listIndex: number): ElementPosition | null {
         const listElement = document.getElementsByClassName("js-list").item(listIndex)
         if (listElement === null) {
@@ -91,56 +115,80 @@ export default class CanvasView {
             left: rect.x, top: rect.y
         }
     }
-    static getItemPosition(listIndex: number, itemIndex: number): ElementPosition | null {
-        const itemElement = this.getItemElement(listIndex, itemIndex)
-        if (itemElement === null) return null
-        const rect = itemElement.getBoundingClientRect()
+
+    /**
+     * 해당 카드의 위치값 얻기
+     * @param listIndex 대상 리스트 인덱스
+     * @param cardIndex 대상 카드 인덱스
+     * @returns 위치값
+     */
+    static getCardPosition(listIndex: number, cardIndex: number): ElementPosition | null {
+        const cardElement = this.getCardElement(listIndex, cardIndex)
+        if (cardElement === null) return null
+        const rect = cardElement.getBoundingClientRect()
         return {
             left: rect.x, top: rect.y
         }
     }
 
+    /**
+     * 해당 리스트의 Element모양 정보 얻기
+     * @returns 모양 정보
+     */
     static getListRect(): DOMRect | null {
         const listElements = document.getElementsByClassName("js-list")
         if (listElements.length === 0) return null
         return listElements.item(this.UNIQUE).getBoundingClientRect()
     }
 
-    static getItemRect(): DOMRect {
-        const itemElements = document.getElementsByClassName("js-item")
-        if (itemElements.length === 0) return null
-        return itemElements.item(this.UNIQUE).getBoundingClientRect()
+    /**
+     * 해당 카드의 Element모양 정보 얻기
+     * @returns 모양 정보
+     */
+    static getCardRect(): DOMRect {
+        const cardElements = document.getElementsByClassName("js-card")
+        if (cardElements.length === 0) return null
+        return cardElements.item(this.UNIQUE).getBoundingClientRect()
     }
 
-    static getItemElement(listIndex: number, itemIndex: number): HTMLElement | null {
+    /**
+     * 해당 카드의 Element정보 얻기
+     * @param listIndex 대상 리스트 인덱스
+     * @param cardIndex 대상 카드 인덱스
+     * @returns Element 정보
+     */
+    static getCardElement(listIndex: number, cardIndex: number): HTMLElement | null {
         const listElement = this.getListElement(listIndex)
         if (listElement === null) return null
-        const itemElement = listElement.getElementsByClassName("js-item").item(itemIndex)
-        if (itemElement === null) return null
-        return itemElement as HTMLElement
+        const cardElement = listElement.getElementsByClassName("js-card").item(cardIndex)
+        if (cardElement === null) return null
+        return cardElement as HTMLElement
     }
 
+    /**
+     * 해당 리스트의 Element정보 얻기
+     * @param listIndex 대상 리스트 인덱스
+     * @returns Element 정보
+     */
     static getListElement(listIndex: number): HTMLElement | null {
         const listElement = document.getElementsByClassName("js-list").item(listIndex)
         if (listElement === null) return null
         return listElement as HTMLElement
     }
 
-
     /**
-     * 아이템 추가 Element의 모드 설정
+     * 카드 추가 Element의 모드 설정
      * @param mode idel : 일반 상태, adding : 추가 중 상태
      */
-    static setItemAddMode(mode: AddMode, listIndex: number) {
+    static setCardAddMode(mode: AddMode, listIndex: number) {
         const listElement = document.getElementsByClassName("js-list").item(listIndex) as HTMLElement
-        const addItem = listElement.getElementsByClassName("add-item").item(this.UNIQUE)
-        if (addItem !== undefined) addItem.remove()
-        const itemAddElement = this.addItemAddElement(listElement, mode)
-        const input = itemAddElement.getElementsByTagName("input").item(this.UNIQUE)
+        const addCard = listElement.getElementsByClassName("add-card").item(this.UNIQUE)
+        if (addCard !== undefined) addCard.remove()
+        const cardAddElement = this.addCardAddElement(listElement, mode)
+        const input = cardAddElement.getElementsByTagName("input").item(this.UNIQUE)
         if (input !== null)
             input.focus()
     }
-
 
     /**
      * 리스트 추가 Element의 모드 설정
@@ -168,19 +216,27 @@ export default class CanvasView {
         return <HTMLScriptElement>newElement
     }
 
-    static replaceItem(listIndex: number, from: number, to: number): HTMLElement {
+    /**
+     * 카드 Element변경
+     * @param listIndex 부모 리스트 Index
+     * @param from 변경 될 카드 Element Index
+     * @param to 변경 할 카드 Index
+     * @returns 변경 된 카드 Element
+     */
+    static replaceCard(listIndex: number, from: number, to: number): HTMLElement {
         const listElement = document.getElementsByClassName("js-list").item(listIndex)
-        const newElement = listElement.getElementsByClassName("js-item").item(from).cloneNode(true)
-        const itemContainer = listElement.getElementsByClassName("item-container").item(this.UNIQUE)
-        const oldElement = itemContainer.childNodes[to]
-        itemContainer.replaceChild(newElement, oldElement)
+        const newElement = listElement.getElementsByClassName("js-card").item(from).cloneNode(true)
+        const cardContainer = listElement.getElementsByClassName("card-container").item(this.UNIQUE)
+        const oldElement = cardContainer.childNodes[to]
+        cardContainer.replaceChild(newElement, oldElement)
         return <HTMLScriptElement>newElement
     }
+
     /**
      * 리스트 순서 변경 시 마우스 Drag로 이동되는 리스트 생성
-     * @param listData 표현될 데이터
+     * @param listData 표현 될 데이터
      * @param position 랜더링 될 위치
-     * @returns 생성된 리스트
+     * @returns 생성 된 리스트
      */
     static createFloatingList(listData: ListData, position: ElementPosition): HTMLElement {
         const floatingList = this.createListElement(listData) as HTMLElement
@@ -190,23 +246,29 @@ export default class CanvasView {
         floatingList.style.top = position.top + "px"
         document.getElementsByTagName("body").item(this.UNIQUE).appendChild(floatingList)
 
-        const itemContainer = floatingList.getElementsByClassName("item-container").item(this.UNIQUE)
-        listData.items.forEach(item => {
-            const wrapperElement = this.createItemElement(item)
-            itemContainer.appendChild(wrapperElement)
+        const cardContainer = floatingList.getElementsByClassName("card-container").item(this.UNIQUE)
+        listData.cards.forEach(card => {
+            const wrapperElement = this.createCardElement(card)
+            cardContainer.appendChild(wrapperElement)
         })
         return floatingList
     }
 
-    static createFloatingItem(itemData: ItemData, position: ElementPosition): HTMLElement {
+    /**
+     * 카드 순서 변경 시 마우스 Drag로 이동되는 카드 생성
+     * @param cardData 표현 될 데이터
+     * @param position 랜더링 될 위치
+     * @returns 생성 된 카드
+     */
+    static createFloatingCard(cardData: CardData, position: ElementPosition): HTMLElement {
         const bodyElement = document.getElementsByTagName("body").item(this.UNIQUE)
-        const floatingItem = this.createItemElement(itemData) as HTMLElement
-        floatingItem.className = "js-item item-wrapper floating"
-        floatingItem.id = "floating-item"
-        floatingItem.style.left = position.left + "px"
-        floatingItem.style.top = position.top + "px"
-        bodyElement.appendChild(floatingItem)
-        return floatingItem
+        const floatingCard = this.createCardElement(cardData) as HTMLElement
+        floatingCard.className = "js-card card-wrapper floating"
+        floatingCard.id = "floating-card"
+        floatingCard.style.left = position.left + "px"
+        floatingCard.style.top = position.top + "px"
+        bodyElement.appendChild(floatingCard)
+        return floatingCard
     }
 
     /**
@@ -223,10 +285,10 @@ export default class CanvasView {
     /**
      * 리스트 순서 변경 시 마우스 Drag로 이동되는 리스트 제거
      */
-    static clearFloatingItem() {
-        const floatItem = document.getElementById("mod-item-float")
-        floatItem.id = undefined
-        const floatingList = document.getElementById("floating-item")
+    static clearFloatingCard() {
+        const floatCard = document.getElementById("mod-card-float")
+        floatCard.id = undefined
+        const floatingList = document.getElementById("floating-card")
         if (floatingList === null) return
         floatingList.remove()
     }
@@ -251,18 +313,23 @@ export default class CanvasView {
         }
     }
 
-    static setFloatingModeItem(listIndex: number, itemIndex, mode: "idle" | "float") {
-        if (listIndex === -1 || itemIndex === -1) return
-        let edittingItem: Element
+    /**
+     * 카드 이동 모드 설정
+     * 클릭&드레그 한 리스트를 이동모드로 전환
+     * @param floatingIndex 이동중인 카드 인덱스
+     */
+    static setFloatingModeCard(listIndex: number, cardIndex, mode: "idle" | "float") {
+        if (listIndex === -1 || cardIndex === -1) return
+        let edittingCard: Element
         switch (mode) {
             case "idle":
-                edittingItem = document.getElementById("mod-item-float")
-                edittingItem.id = undefined
+                edittingCard = document.getElementById("mod-card-float")
+                edittingCard.id = undefined
                 break;
             case "float":
                 const edittingList = document.getElementsByClassName("js-list list-wrapper").item(listIndex)
-                edittingItem = edittingList.getElementsByClassName("js-item item-wrapper").item(itemIndex)
-                edittingItem.id = "mod-item-float"
+                edittingCard = edittingList.getElementsByClassName("js-card card-wrapper").item(cardIndex)
+                edittingCard.id = "mod-card-float"
                 break;
         }
     }
@@ -272,9 +339,9 @@ export default class CanvasView {
      * 리스트 추가 요소
      * @param mode idle : 추가 대기, adding : 추가 중
      */
-    private static getAddElement(mode: AddMode, type: "list" | "item"): HTMLDivElement {
+    private static getAddElement(mode: AddMode, type: "list" | "card"): HTMLDivElement {
         const wrapperElement = document.createElement("div")
-        const wrapperClassName = type === "list" ? "js-add-list" : "js-add-item"
+        const wrapperClassName = type === "list" ? "js-add-list" : "js-add-card"
         switch (mode) {
             case AddMode.IDLE:
                 wrapperElement.className = `list-wrapper mod-add is-idle ${wrapperClassName}`
@@ -296,7 +363,7 @@ export default class CanvasView {
 
                 const placeHoderText = document.createElement("span")
                 placeHoderText.innerHTML = "Add another "
-                placeHoderText.innerHTML += type === "list" ? "list" : "item"
+                placeHoderText.innerHTML += type === "list" ? "list" : "card"
                 placeHolder.appendChild(placeHoderText)
                 break;
 
@@ -304,7 +371,7 @@ export default class CanvasView {
                 wrapperElement.className = `js-add-list list-wrapper mod-add ${wrapperClassName}`
 
                 const listNameInput = document.createElement("input")
-                listNameInput.className = type === "list" ? "list-name-input" : "item-name-input"
+                listNameInput.className = type === "list" ? "list-name-input" : "card-name-input"
                 listNameInput.placeholder = type === "list" ? "Enter list title..." : "Enter a title for this card..."
                 listNameInput.type = "text"
                 listNameInput.name = "name"
@@ -315,7 +382,7 @@ export default class CanvasView {
                 wrapperElement.appendChild(listNameInput)
 
                 const listAddControls = document.createElement("div")
-                listAddControls.className = type === "list" ? "list-add-controls" : "item-add-controls"
+                listAddControls.className = type === "list" ? "list-add-controls" : "card-add-controls"
                 wrapperElement.appendChild(listAddControls)
 
                 const addButton = document.createElement("input")
@@ -357,9 +424,9 @@ export default class CanvasView {
         titleElement.innerHTML = listData.title
         listHeader.appendChild(titleElement)
 
-        const itemContainer = document.createElement("div")
-        itemContainer.className = "item-container"
-        listElement.appendChild(itemContainer)
+        const cardContainer = document.createElement("div")
+        cardContainer.className = "card-container"
+        listElement.appendChild(cardContainer)
 
         return wrapperElement
     }
