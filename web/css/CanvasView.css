@@ -28,7 +28,6 @@
 .list-wrapper {
     width: 272px;
     margin: 0 4px;
-    min-height: 100%;
     box-sizing: border-box;
     display: inline-block;
     vertical-align: top;
